@@ -1,0 +1,86 @@
+select p_name, decode(substr(replace(sequence_year, ',',''),1,10), '011', '3 consistent year', '0111',  '4 consistent year',  'not consistent') progress  from
+(select p_name, 
+--p_year, nvl(get_exact, 0),
+LISTAGG(ALL nvl(get_exact,0), ',')
+         WITHIN GROUP (ORDER BY p_year)
+         AS sequence_year 
+         from 
+(
+select p_name, p_year, lag(p_year) over (partition by p_name order by p_year) last_year, 
+abs((lag(p_year) over (partition by p_name order by p_year)) - p_year) get_exact
+from participant_data
+)
+
+group by p_name
+)
+order by 1,2;
+
+
+-- Two column table require to input data columns should be in varchar2
+
+SET DEFINE OFF;
+Insert into SCOTT.PARTICIPANT_DATA
+   (P_NAME, P_YEAR)
+ Values
+   ('Nadir', '1981');
+Insert into SCOTT.PARTICIPANT_DATA
+   (P_NAME, P_YEAR)
+ Values
+   ('Nadir', '1982');
+Insert into SCOTT.PARTICIPANT_DATA
+   (P_NAME, P_YEAR)
+ Values
+   ('Nadir', '1984');
+Insert into SCOTT.PARTICIPANT_DATA
+   (P_NAME, P_YEAR)
+ Values
+   ('Nadir', '1985');
+Insert into SCOTT.PARTICIPANT_DATA
+   (P_NAME, P_YEAR)
+ Values
+   ('Nadir', '1986');
+Insert into SCOTT.PARTICIPANT_DATA
+   (P_NAME, P_YEAR)
+ Values
+   ('Shahid', '1981');
+Insert into SCOTT.PARTICIPANT_DATA
+   (P_NAME, P_YEAR)
+ Values
+   ('Shahid', '1982');
+Insert into SCOTT.PARTICIPANT_DATA
+   (P_NAME, P_YEAR)
+ Values
+   ('Shahid', '1983');
+Insert into SCOTT.PARTICIPANT_DATA
+   (P_NAME, P_YEAR)
+ Values
+   ('Zahid', '1981');
+Insert into SCOTT.PARTICIPANT_DATA
+   (P_NAME, P_YEAR)
+ Values
+   ('Zahid', '1982');
+Insert into SCOTT.PARTICIPANT_DATA
+   (P_NAME, P_YEAR)
+ Values
+   ('Zahid', '1984');
+Insert into SCOTT.PARTICIPANT_DATA
+   (P_NAME, P_YEAR)
+ Values
+   ('Zahid', '1985');
+Insert into SCOTT.PARTICIPANT_DATA
+   (P_NAME, P_YEAR)
+ Values
+   ('Khizar', '1981');
+Insert into SCOTT.PARTICIPANT_DATA
+   (P_NAME, P_YEAR)
+ Values
+   ('Khizar', '1982');
+Insert into SCOTT.PARTICIPANT_DATA
+   (P_NAME, P_YEAR)
+ Values
+   ('Khizar', '1983');
+Insert into SCOTT.PARTICIPANT_DATA
+   (P_NAME, P_YEAR)
+ Values
+   ('Khizar', '1984');
+COMMIT;
