@@ -1,0 +1,42 @@
+--- Reterive Employee hierarchy within one table, it can be used to join multiple tables.
+SELECT ename, empno,  mgr, LEVEL-1, SYS_CONNECT_BY_PATH(ename, '/') "Path" ,
+CONNECT_BY_ROOT ENAME "Manager"
+FROM EMP
+START WITH MGR IS NULL
+CONNECT BY PRIOR empno = mgr;
+
+--- Department wise highest salary
+
+select * from
+(
+SELECT ename, empno,  deptno, sal,
+DENSE_RANK() OVER (PARTITION BY deptno order by sal desc) AS drank
+FROM EMP
+)
+where
+drank = 1
+
+--Department wise query
+SELECT ename, deptno, sal,
+DENSE_RANK() OVER (PARTITION BY deptno order by sal desc) AS drank
+FROM EMP;
+
+-- Department wise highet and lowes salary
+SELECT deptno,
+MIN(sal) KEEP (DENSE_RANK FIRST ORDER BY comm) "Worst",
+MAX(sal) KEEP (DENSE_RANK LAST ORDER BY comm) "Best"
+FROM emp
+GROUP BY deptno;
+
+---Employees with highest salary first
+select rownum, sal
+from
+(SELECT ename, sal FROM emp ORDER BY sal DESC)
+
+--- Top 3 salaries
+select * from 
+(
+select sal,row_Number() over (order by sal DESC ) RN 
+FROM emp
+)s
+where RN <= 3
