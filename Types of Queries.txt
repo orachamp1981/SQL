@@ -1,0 +1,40 @@
+------------------- Types of Queries and Sub queries -------------------------
+
+1. Simple Query example
+
+Select * from emp;
+Select * from emp T1, Dept T2 where T2.deptno = T1.Deptno
+
+2. Scalar Query/ Scalar Sub Query Example  Return one result against row else error
+
+Select T1.empno, T1.ename, T1.deptno, (select dname from dept where deptno = t1.deptno) dname
+from emp;
+
+3. Corelated Query or Correlated Sub Query
+
+Select empno, ename, sal from emp
+where
+sal = (select max(sal) from emp)
+
+4. Multile Row Subquery
+
+SELECT    ename, deptno
+FROM emp
+WHERE deptno in (SELECT deptno FROM emp WHERE deptno = 10)
+
+5. Scalar subquery (nested subquery)
+
+SELECT
+   (
+      SELECT
+         COUNT(*)
+      FROM
+         EMP
+   )+(
+      SELECT
+         COUNT(*)
+      FROM
+         DEPT
+   ) as "rows in dept + rows in emp"
+FROM
+   DUAL;
