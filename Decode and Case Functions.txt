@@ -1,0 +1,86 @@
+---------------------------------Decode and Case ------------------------------------------------------------
+
+Oracle SQL Provide bundles of Built in Functions which divided in several categories
+
+Single-Row Functions
+– Numeric Functions
+– Character Functions Returning Character Values
+– Character Functions Returning Number Values
+– Character Set Functions
+– Datetime Functions
+– General Comparison Functions
+– Conversion Functions
+– Large Object Functions
+– Collection Functions
+– Hierarchical Functions
+– Data Mining Functions
+– XML Functions
+– Encoding and Decoding Functions
+– NULL-Related Functions
+– Environment and Identifier Functions
+Aggregate Functions
+Analytic Functions
+Object Reference Functions
+Model Functions
+OLAP Functions
+Data Cartridge Functions
+About User-Defined Functions
+
+Big discussion require to discuss but here we just discuss to single row functions
+1. Decode
+2. Case
+
+----------------------------------What is Decode    -------------------------------------------------------
+Decode('Column_name to find value', 'Outcome_value', 'Assigned_Value', 'Default_Value/Null')
+Select empno, job, Decode(job, 'IT', 'Information Technology', 'All Sort') Comments from emp
+
+Decode('Column_name to find value', 'Outcome_value', 'Assigned_Value', 'Outcome_value', Asigned_Value','Default_Value/Null')
+Select empno, job, Decode(job, 'IT', 'Information Technology', 'CLERK', 'Random Work', 'All Sort') Comments from emp
+
+Decode('Column_name to find value', 'Outcome_value', 'Assigned_Value', 'Outcome_value', Asigned_Value' Defalt Null)
+Select empno, job, Decode(job, 'IT', 'Information Technology', 'CLERK', 'Random Work') Comments from emp
+
+----------------------------------When to use Decode -------------------------------------------------------
+DECODE compares expr to each search value one by one. If expr is equal to a search,
+then Oracle Database returns the corresponding result. If no match is found, then
+Oracle returns default. If default is omitted, then Oracle returns null.
+
+Consider following query
+
+Select empno, job, Decode(job, 'IT', 'Information Technology', 'All Sort') Comments from emp
+
+Not necessary to use Decode as we achieve more better result by combining it with Department Table.
+
+On bulk data of around 10000 rows sometime there is a column in which values are not same but same/in range for 3000 each in this case we use decode for example
+
+select ename, sal, decode (comm, '', 'Not Getting', 'Getting') comments from emp;
+
+There can be multiple columns in query can be decoded
+We can use in where clause as well.
+
+----------------------------------When to use Case -------------------------------------------------------
+
+Consider following query salary is variable still many values not fulfill the condition and return null. Here we cannot give same comment to all
+
+select ename, sal, decode (Sal, 10000, 'Very Good', 800, 'Very Less') comments from emp;
+
+
+Here is in need of function called Case Expression sometimes called function
+
+select ename, sal, 
+Case  
+When sal between 1 and 1000 then 'Low'
+When sal between 1001 and 3000 then 'Good'
+When sal between 3001 and 10000 then 'Very Good'
+else
+'Out of Range'
+end Sale_Comments
+from emp;
+
+Compare these two statement Case will more suitable here. 
+
+In several scenarios we can use scalar query in case as well.
+
+Here with Average function
+
+SELECT AVG(CASE WHEN e.sal > 2000 THEN e.sal ELSE 2000 END) "Average Salary" FROM emp e;
