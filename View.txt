@@ -1,0 +1,70 @@
+---------------------------------------------- Views --------------------------------------------------------------------
+
+What is view?
+
+A view contains no data itself. The tables upon which a view is based are called base tables.
+In simples words the combination of more than one tables with compute or formulate columns are called view. We add subquery, innerquery, scalar query, funtions, 
+nested table and all possible conditions according to requirement.
+
+View is database object but not or modification, simply a mirror to reflect data.
+
+
+Create or Replace View employee_info
+as
+(select t1.empno, t1.ename, t1.sal*12 yearly_sal, t2.dname
+from
+emp t1, dept t2
+where
+t2.deptno = t1.deptno)
+/
+
+Select * from  employee_info
+/
+
+View can be modified but not for DML operations. 
+
+According to my opinion there should be less use of view because it affect on performance and the major cause of slow execution.
+
+-------------------------------  MATERIALIZED VIEW ------------------------------------------------------------------------
+
+Major difference between View and Materialized view as under
+
+For replication purposes, materialized views allow you to maintain copies of remote data on your local node. The copies can be updatable with the Advanced Replication
+feature and are read-only without this feature. You can select data from a materialized view as you would from a table or view. In replication environments, the materialized views commonly created are primary key, rowid, object, and subquery materialized views.
+
+When to create materialized view?
+
+For data warehousing purposes, the materialized views commonly created are 
+
+■ Materialized aggregate views, including materialized aggregate views on a single
+table
+■ Materialized join views
+■ Primary-key-based and rowid-based single table materialized views
+■ UNION ALL materialized views, where each UNION ALL branch is one of the above materialized view types
+
+
+All three types of materialized views can be used by query rewrite, an optimization technique that transforms a user request written in terms of master tables into a semantically equivalent request that includes one or more materialized views. materialized views allow you to maintain copies of remote data on your local node. The copies can be updatable with the Advanced Replication feature and are read-only without this feature. You can select data from a materialized view as you would from a table or view. In replication environments, the materialized views commonly created are primary key, rowid, object, and subquery materialized views.
+
+
+CREATE MATERIALIZED VIEW mv1 AS SELECT * FROM hr.employees;
+
+CREATE MATERIALIZED VIEW foreign_customers FOR UPDATE
+AS SELECT * FROM sh.customers@remote cu
+WHERE EXISTS
+(SELECT * FROM sh.countries@remote co
+WHERE co.country_id = cu.country_id);
+
+CREATE MATERIALIZED VIEW sales_mv
+BUILD IMMEDIATE
+REFRESH FAST ON COMMIT
+AS SELECT t.calendar_year, p.prod_id,
+SUM(s.amount_sold) AS sum_sales
+FROM times t, products p, sales s
+WHERE t.time_id = s.time_id AND p.prod_id = s.prod_id
+GROUP BY t.calendar_year, p.prod_id;
+
+CREATE MATERIALIZED VIEW my_warranty_orders
+AS SELECT w.order_id, w.line_item_id, o.order_date
+FROM warranty_orders w, orders o
+WHERE o.order_id = o.order
+
