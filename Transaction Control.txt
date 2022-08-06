@@ -1,0 +1,101 @@
+-----------------------------------------------------------Transaction Control ---------------------------------------------------------------------------------------
+
+Transaction Control (TCL) in SQL and PL/SQL
+
+Before proceeding to let understand three commands
+
+1. Commit
+2. Rollback
+3. Savepoint
+
+
+Q1. What are DML Commands?
+Ans. Most commonly are Insert, Update and Delete. These are not auto committed.
+
+Q2. What are DDL Commands?
+Ans. Most commonly are Create, Alter, Drop and Add. These are auto committed.
+
+
+So TCL control can applied on transaction level only means DML only, not on DDL.
+
+
+--------------------------------How to use TCL ------------------------------------------------------------------------------------------------
+
+
+Create Table Class
+(
+Id		Number,
+Name_Std	Varchar2(100)
+)
+/
+
+select * from Class
+/
+no rows returned
+
+
+insert into class
+values
+(1, 'Nadir Ali')
+/
+ 
+Row 1 of 1
+
+In this case one row can be viewed but still it require commit to save/permanent.
+
+commit
+/
+
+this row is permanent. No user of rollback command even we use no impact on transaction.
+
+
+Now consider following example
+
+insert into class
+values
+(2, 'Huzaifa Ali')
+/
+SAVEPOINT A
+/
+insert into class
+values
+(3, 'Khizar Murtaza')
+/
+SAVEPOINT B
+/
+insert into class
+values
+(4, 'Ameer Muawiyah')
+/
+
+select * from class
+/
+
+4 rows returned.
+
+Now run following command
+
+Rollback to B
+
+and run select statement
+
+Select * from Class
+/
+
+3 rows returned
+
+Now run following command
+
+Rollback to A
+
+and run select statement
+
+Select * from Class
+
+/
+
+2 rows returned
+
+In that stage if we commit then 2 rows will be shown in table as permanent rows.
+
+If you need id 3 and 4 in table re insertion require.
