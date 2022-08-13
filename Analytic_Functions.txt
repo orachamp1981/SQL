@@ -1,0 +1,82 @@
+-----------------------------------Oracle Analytic Functions -------------------------------------------------------------
+1. LEAD
+
+Q:- Orgaization would like to know how fast or slow they are hiring and what gap occur during one to next hire?
+
+A:- We will use analytic function "LEAD" this will sort out the row as per our requirement in ascending order hiredate.
+    without any selfjoin we will get next hire date. From the set of record we will easily answer the difference of hiring
+    days from last.
+
+select ename, hiredate, nexthired, nexthired-hiredate Difference_in_Days
+from
+(SELECT ename, hiredate,
+LEAD(hiredate, 1) OVER (ORDER BY hiredate) AS NextHired
+FROM emp)
+ 
+
+2. DENSE_RANK, FIRST, LAST
+
+Q:- Organization wants to know payscale statics for each department? 
+
+A:- We use three statical functions (DENSE_RANK, FIRST, LAST) provided by Oracle example is under:-
+    
+    	SELECT deptno,
+	MIN(sal) KEEP (DENSE_RANK FIRST ORDER BY comm) "High",
+	MAX(sal) KEEP (DENSE_RANK LAST ORDER BY comm) "Low"
+	FROM emp
+	GROUP BY deptno;
+
+Note:- Current statics is for salary, we can use if scenario based on product sale, profit loss etc
+
+
+3. Mean, Median and Mode function 
+
+Mean, median, and mode are three kinds of average values that can be obtained from a set of data.
+
+How to Calculate the Mean, Median, and Mode in Oracle
+
+Mean: This is the “average” that you might know. It’s the sum of all of the numbers divided by the count of numbers.
+Median: This is the middle value of a list of numbers.
+Mode: This is the value that occurs most often 
+Standard Deviation: A value that represents how much numbers differ from each other
+
+Mean = Avg in Oracle
+
+select avg(sal) from emp;
+
+What excatly the query going to do is to take sum of the rows in column/total number of rows.
+
+To calculate the median in Oracle SQL, we use the MEDIAN function.
+
+The MEDIAN function returns the median of the set of provided values.
+
+The MEDIAN is the middle value in a set of values.
+
+So, for example, you had these five values:
+
+10, 15, 18, 23, 40.
+
+The median of these would be the middle value after they have been ordered in ascending order. So, the median would be 18.
+
+20000, 10000, 800, 1600, 1250, 2975, 1250, 2850, 2450, 3000, 5000, 1500, 1100, 950, 3000, 1300
+
+select median(sal) from emp;
+
+In this case the answer will be 2025 because we have 16 values median first sort sal in ascending then go to mid point
+
+800, 950, 1100, 1250, 1250, 1300, 1500, 1600, 2450, 2850, 2975, 3000, 3000, 5000, 10000, 20000
+
+If rows are even then two middle values considered and there middle taken which is 2025 values taken (1600, 2450).
+
+For Mode we use following query 
+
+select stats_mode(sal) from emp order by 1;
+select stats_mode(sal) from emp;
+
+Not matter which query will be used answer remain same in that case.
+We will get in one query as well
+
+select avg(sal) Mean_Sal, median(sal) Median_Sal,  stats_mode(sal) Mode_Sal from emp order by 1;
+
+If analysis done on the basis of department wise median salary then following query can be used to obtain data 
+select distinct(deptno), median(sal) over (partition by deptno) Median_Sal_Dept from emp; 
