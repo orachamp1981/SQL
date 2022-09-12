@@ -1,0 +1,81 @@
+----------------------------------------------Simple SQL Query to Take Count of Days ---------------------------------------------------------------------
+
+
+Would like to share my experience during report modification, wrong method used to get day count which replaced by right method "reusable".
+
+Let understand this with little example
+
+
+Creation of Table and data insert.
+
+CREATE TABLE SCOTT.EMP_LOGS
+(LOG_DATE DATE,
+USER_ID VARCHAR2(100)
+)
+/
+INSERT INTO scott.EMP_LOGS
+VALUES
+(SYSDATE, 'SCOTT')
+/
+INSERT INTO scott.EMP_LOGS
+VALUES
+(SYSDATE-1, 'SCOTT')
+/
+INSERT INTO scott.EMP_LOGS
+VALUES
+(SYSDATE-2, 'SCOTT')
+/
+INSERT INTO scott.EMP_LOGS
+VALUES
+(SYSDATE-3, 'SCOTT')
+/
+INSERT INTO scott.EMP_LOGS
+VALUES
+(SYSDATE-4, 'SCOTT')
+/
+INSERT INTO scott.EMP_LOGS
+VALUES
+(SYSDATE-5, 'SCOTT')
+/
+INSERT INTO scott.EMP_LOGS
+VALUES
+(SYSDATE-6, 'SCOTT')
+/
+INSERT INTO scott.EMP_LOGS
+VALUES
+(SYSDATE-7, 'SCOTT')
+/
+
+---------------------- Use Toad for running this example ------------------------------------
+
+Parameter Values
+:sent_to_telenor = '12-SEP-2022'
+:Requested_to_EFU = '05-SEP-2022'
+
+
+select * from emp_logs;
+-- 8 rows
+
+
+
+-------------- Right Approach---------------------------------
+SELECT (TO_DATE(:sent_to_telenor, 'DD/MM/RRRR') - TO_DATE(:Requested_to_EFU, 'DD/MM/RRRR')) days  FROM DUAL;	
+ 7 days
+--------------Wrong Approach but result is right ---------------------------------------------- 
+SELECT COUNT(USER_ID) FROM EMP_LOGS WHERE LOG_DATE BETWEEN  :Requested_to_EFU AND :sent_to_telenor; 
+7 days
+
+
+
+Parameter Values
+:sent_to_telenor = '15-SEP-2022'
+:Requested_to_EFU = '05-SEP-2022'
+
+
+-------------- Right Approach right result---------------------------------
+SELECT (TO_DATE(:sent_to_telenor, 'DD/MM/RRRR') - TO_DATE(:Requested_to_EFU, 'DD/MM/RRRR')) days  FROM DUAL;	
+10 days
+
+--------------Wrong Approach but result is right ---------------------------------------------- 
+SELECT COUNT(USER_ID) FROM EMP_LOGS WHERE LOG_DATE BETWEEN  :Requested_to_EFU AND :sent_to_telenor; 
+8 days
