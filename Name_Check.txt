@@ -1,0 +1,25 @@
+select  clean_name, nvl(first_name, last_name) first_name, middle_name, 
+decode(first_name, null, null, last_name) last_name 
+from
+(Select clean_name, first_name,
+	regexp_replace(trim(regexp_replace(extract_middle, last_name , ' ')), '\s+', ' ') middle_name, last_name 
+	from 
+  (select Clean_name, first_name, regexp_replace(Clean_name, first_name , ' ') extract_middle,
+  last_name
+  from
+ (
+ 
+ select clean_name, substr((trim(clean_name)),1, (instr(trim(clean_name),' ',1,1)-1))  first_name,
+	substr(trim(clean_name), instr(trim(clean_name),' ',-1)+1) as last_name
+	from   
+			(
+select 
+:name,
+	trim(ltrim(regexp_replace(upper(:name), '(MR. )|(MRS. )|(MS. )', ''),'.')) clean_name
+	from dual
+	
+
+ )
+	)
+	)
+	)
