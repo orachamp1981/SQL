@@ -1,0 +1,53 @@
+create table test_table
+(ref_no number,
+ Name_Ref varchar2(100)
+ )
+ 
+ /
+
+insert into test_table
+values
+(1, 'Number One')
+/
+insert into test_table
+values
+(2, 'Number Two')
+/
+insert into test_table
+values
+(3, 'Number Three')
+/
+insert into test_table
+values
+(4, 'Number Four')
+/
+insert into test_table
+values
+(5, 'Number Five')
+/
+insert into test_table
+values
+(6, 'Number Six')
+/
+insert into test_table
+values
+(7, 'Number Seven')
+/
+insert into test_table
+values
+(8, 'Number Eight')
+/
+insert into test_table
+values
+(10, 'Number Ten')
+/
+insert into test_table
+values
+(11, 'Number Eleven')
+/
+
+
+
+select level ref_no from dual connect by level <=(select max(ref_no) from test_table)
+minus
+select ref_no from test_table
