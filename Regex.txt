@@ -1,0 +1,25 @@
+select * from table1 where REGEXP_LIKE(column1, '[^A-Z^a-z^0-9^[^.^{^}]' ,'x');
+REGEXP_LIKE(EncDec_PI.Decrypt(BANK_BRANCH_NAME), '[^0-9A-Za-z\(\)\-]');
+case 
+           when regexp_like(BANK_BRANCH_NAME, '^[^a-zA-Z]*$') then 'number'
+           when regexp_like(BANK_BRANCH_NAME, '^[^g-zG-Z]*$') then 'hex'
+           else 'string'
+         end typ;
+SELECT regexp_replace('(Hi-There)','[^0-9A-Za-z\(\)\-]', '')  FROM dual;
+SELECT :l_string FROM DUAL WHERE REGEXP_LIKE(:L_STRING,  '[^0-9A-Za-z\(\)\-]');
+SELECT
+    OBJECT_NAME
+FROM
+    (
+
+        SELECT 'NADIR - 321 *#@' OBJECT_NAME FROM DUAL UNION
+        SELECT 'NADIR *#@' FROM DUAL UNION
+        SELECT 'NADIR - 321' FROM DUAL UNION
+        SELECT 'NADIR_123456789 -' FROM DUAL UNION
+        SELECT 'IBRAHIM-321 --' FROM DUAL UNION
+        SELECT 'IBRAHIM 321 *' FROM DUAL UNION
+        SELECT 'ABC_SCssB_MOD_REG_SP' FROM DUAL
+    )
+    where
+      regexp_like (OBJECT_NAME , '[0-9A-Za-z].[-]')  
+;
